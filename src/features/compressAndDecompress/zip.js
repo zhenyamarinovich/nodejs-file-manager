@@ -6,15 +6,15 @@ import { throwOperationFailed } from "../../selectors.js";
 
 export const compress = (currentPath, oldPath, newPath) => {
   try {
-    const inp = fs.createReadStream(path.resolve(currentPath, oldPath));
+    const readStream = fs.createReadStream(path.resolve(currentPath, oldPath));
 
-    const out = fs.createWriteStream(
+    const writableStream = fs.createWriteStream(
       `${path.resolve(currentPath, newPath, path.basename(oldPath))}.gz`
     );
 
-    const brot = zlib.createBrotliCompress();
+    const brotli = zlib.createBrotliCompress();
 
-    inp.pipe(brot).pipe(out);
+    readStream.pipe(brotli).pipe(writableStream);
   } catch {
     throwOperationFailed();
   }
@@ -22,9 +22,9 @@ export const compress = (currentPath, oldPath, newPath) => {
 
 export const decompress = (currentPath, oldPath, newPath) => {
   try {
-    const inp = fs.createReadStream(path.resolve(currentPath, oldPath));
+    const readStream = fs.createReadStream(path.resolve(currentPath, oldPath));
 
-    const out = fs.createWriteStream(
+    const writableStream = fs.createWriteStream(
       `${path.resolve(
         currentPath,
         newPath,
@@ -32,9 +32,9 @@ export const decompress = (currentPath, oldPath, newPath) => {
       )}`
     );
 
-    const brot = zlib.createBrotliDecompress();
+    const brotli = zlib.createBrotliDecompress();
 
-    inp.pipe(brot).pipe(out);
+    readStream.pipe(brotli).pipe(writableStream);
   } catch {
     throwOperationFailed();
   }
